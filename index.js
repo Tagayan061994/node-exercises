@@ -1,37 +1,29 @@
-const fs = require("fs");
-const path = require("path");
+const http = require("http");
 
-const fcPromises = fs.promises;
+let arr = [];
 
-const fileOps = async () => {
-  try {
-    const data = await fcPromises.readFile(
-      path.join(__dirname, "files", "read.txt"),
-      "utf8"
-    );
+http
+  .createServer((req, res) => {
+    if (req.method === "GET") {
+      console.log("mtav stex");
 
-    console.log("data", data);
-  } catch (err) {
-    throw err;
-  }
-};
-fileOps();
-
-//simple way, without promoses
-// fs.readFile(path.join(__dirname, "files", "read.txt"), "utf8", (err, data) => {
-//   console.log("__dirname", __dirname);
-//   if (err) {
-//     console.log("err", err);
-//   }
-//   console.log("data", data);
-// });
-
-// fs.writeFile(
-//   path.join(__dirname, "files", "write.txt"),
-//   "Write file in",
-//   (err) => {
-//     if (err) {
-//       console.log("err", err);
-//     }
-//   }
-// );
+      res.setHeader("Access-Control-Allow-Origin", "*");
+      res.setHeader("Access-Control-Allow-Methods", "GET");
+      res.setHeader("Content-Type", "application/json");
+      res.write(JSON.stringify({ status: 200, message: "ok", data: arr }));
+      return res.end();
+    }
+    if (req.method === "POST") {
+      const body = "";
+      req.on("data", (data) => {
+        body += data;
+      });
+      return req.on("end", () => {
+        arr.push(JSON.parse(body));
+        res.write(JSON.stringify({ message: "OK", statusCode: 201 }));
+      });
+    }
+    return res.end();
+  })
+  .listen(8000);
+hasmik.movsisyan;
